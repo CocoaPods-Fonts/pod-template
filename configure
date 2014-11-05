@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'erb'
+
+pod_name = ARGV.shift
+
+unless pod_name && !pod_name.empty?
+  puts("Please supply a pod name.")
+  exit 1
+end
+
+# TODO This should be determined at runtime
+font = Font.new('OpenSans', [
+  FontStyle.new('Regular', 'OpenSans', 'OpenSans'),
+  FontStyle.new('Italic', 'OpenSans-Italic', 'OpenSans-Italic')
+])
+
+puts("Creating #{font.extension_name} Pod.")
+
+files = {
+  'UIFont.h' => "UIFont+#{font.extension_name}.h",
+  'UIFont.m' => "UIFont+#{font.extension_name}.m",
+  'UIFontTests.m' => "#{font.extension_name}Tests.m",
+  'UIFont.podspec' => "#{font.extension_name}.podspec",
+}
+
+files.each do |source, destination|
+  template = ERB.new(File.read(source))
+  File.write(destination, template.result)
+end
+
+# License
+# podspec
+# Demo
+# Fonts directory
+# Readme
+# travis
+# screenshots
+#
